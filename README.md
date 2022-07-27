@@ -6,7 +6,6 @@ Sample request for success
 curl --location --request POST 'http://localhost:8081/employee' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-
     "email" : "scurry@mule.com",
     "name" : "Steff Curry",
      "dept" : {
@@ -20,7 +19,6 @@ Sample request for failure
 curl --location --request POST 'http://localhost:8081/employee' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-
     "email" : "scurrymule.com",
     "name" : "Steff Curry",
      "dept" : {
