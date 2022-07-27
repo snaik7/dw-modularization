@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="cdbfd5c5-1137-474f-ab66-ad5d02b83b97" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="dw-modularizationFlow" doc:id="c223211d-65a2-4b75-ac58-ac17f137db13" >
+		<http:listener doc:name="Listener" doc:id="e464c394-00b7-437f-b58a-824de2bfca22" config-ref="HTTP_Listener_config" path="/employee" allowedMethods="POST">
+			<http:response >
+				<http:body ><![CDATA[#[${file::dwl/RenderScript.dwl}]]]></http:body>
+			</http:response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="d30d5ec3-fae7-4357-8bb5-704bbcb51f74" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::WorkDay
+import mask as mask from dwl::Utilities
+import try, fail from dw::Runtime
+output application/json
+---
+try(() -> WorkDay::employee(payload, true))]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
